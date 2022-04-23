@@ -21,7 +21,11 @@ type application struct {
 
 // serve starts a http server and serves the application.
 func (app *application) serve() error {
-	router := app.routes()
+	router, err := app.routes()
+	// TODO: Add log
+	if err != nil {
+		return err
+	}
 	return router.Run(fmt.Sprintf(":%d", app.config.port))
 }
 

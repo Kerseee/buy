@@ -8,5 +8,7 @@ import (
 
 // VertualTerminal responds welcome message for now.
 func (app *application) VirtualTerminal(c *gin.Context) {
-	c.String(http.StatusOK, "Welcome to virtual terminal!")
+	c.HTML(http.StatusOK, "terminal.tmpl", gin.H{
+		"msg": "Successfully render template!",
+	})
 }
