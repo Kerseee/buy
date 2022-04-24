@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"path/filepath"
 	"strings"
 
@@ -26,7 +25,6 @@ func createRenderer() (multitemplate.Renderer, error) {
 		files := []string{page}
 		files = append(files, layouts...)
 		name := strings.Split(filepath.Base(page), ".")[0]
-		fmt.Println(name)
 		r.AddFromFiles(name, files...)
 	}
 

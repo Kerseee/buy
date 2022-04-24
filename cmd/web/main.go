@@ -22,7 +22,6 @@ type application struct {
 // serve starts a http server and serves the application.
 func (app *application) serve() error {
 	router, err := app.routes()
-	// TODO: Add log
 	if err != nil {
 		return err
 	}
