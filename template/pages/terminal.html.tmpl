@@ -7,26 +7,70 @@
 {{define "content"}}
     <h1>Welcome to this virtual Terminal page</h1>
     
-    <form>
+    <form id="pay-form" >
         <div class="mb-3">
             <label for="amount" class="form-label">Amount</label>
-            <input type="number" class="form-control" id="amount">
+            <input type="number" class="form-control" id="amount" name="amount" autocomplete="off" required="required">
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="email" aria-describedby="emailHelp">
+            <input type="email" class="form-control" id="email" name="email" autocomplete="off" required="required">
         </div>
         <div class="mb-3">
             <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-control" id="password">
+            <input type="password" class="form-control" id="password" name="password" autocomplete="off" required="required">
         </div>
         <div class="mb-3">
             <label for="card-holder" class="form-label">Card holder</label>
-            <input type="text" class="form-control" id="card-holder">
+            <input type="text" class="form-control" id="card-holder" name="card-holder" autocomplete="off" required="required">
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="mb-3">
+            <label for="card" class="form-label">Card</label>
+            <div id="card" class="form-control"></div>
+            <div id="card-errors"></div>
+        </div>
+        
+        <a id="pay-button" href="javascript:void(0)" class="btn btn-primary" onclick="validate()">Charge card</a>
     </form>
-    
+{{end}}
 
+{{define "js"}}
+<script src="https://js.stripe.com/v3/"></script>
+    <script>
+        // Create stripe.
+        let stripe = Stripe('pk_test_51KqwGfFJU0SlaUllLdKMMVtFh9Ua5MuQG5WkXuExs1Hb85uvbR4xl1zCZYRXD6jILGAApfaAVpw9u1NZJGVXQcza00np2sqVri');
+        let elements = stripe.elements();
+        
+        // Create a card.
+        let card = elements.create('card', {
+            hidePostalCode: true,    
+        });
+        card.mount('#card');
+        card.on('change', function(event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.classList.remove('d-none');
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.classList.add('d-none');
+                displayError.textContent = '';
+            }
+        });
 
+        // Validate the payment.
+        function validate() {
+            let form = document.getElementById('pay-form');
+            if (form.checkValidity() === false) {
+                this.event.preventDefault();
+                this.event.stopPropagation();
+                form.classList.add("was-validated");
+                return
+            }
+            form.classList.add("was-validated");
+            console.log(Array.from(form.elements).map((e) => {
+                return `${e.name}: ${e.value}`;
+            }))
+        }
+        
+    </script>
 {{end}}
